@@ -1,0 +1,16 @@
+*.elc
+/eln-cache/
+
+/elpa/
+
+/auto-save-list/
+/backups/
+/tree-sitter/
+/tutorial/
+/transient/
+
+/recentf
+/projects
+/.mc-lists.el
+
+/custom.el

@@ -1,0 +1,339 @@
+;;; init.el --- Main Emacs Config -*- lexical-binding: t; -*-
+
+(require 'cl-lib)
+
+;; System
+(defconst is-windows (eq system-type 'windows-nt))
+
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+
+(when is-windows
+  (set-clipboard-coding-system 'utf-16le-dos)
+  (setq process-coding-system-alist
+        '((".*" . utf-8-unix))))
+
+(defun sztk-path-msys2-to-windows (path)
+  (let ((p (expand-file-name path)))
+    (if (executable-find "cygpath")
+        (string-trim (shell-command-to-string
+                      (format "cygpath -w \"%s\"" p)))
+      (convert-standard-filename p))))
+
+;; GC
+(setq gc-cons-threshold (* 64 1024 1024))
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
+
+;; UI
+(setq inhibit-startup-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t
+      initial-scratch-message nil
+      use-dialog-box nil)
+
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode 1))
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+(setq-default indent-tabs-mode nil
+              fill-column 78
+              require-final-newline t)
+
+(column-number-mode 1)
+(global-hl-line-mode 1)
+
+(winner-mode 1)
+(repeat-mode 1)
+
+;; IME
+(setq default-input-method nil)
+
+;; Backup
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name "backups" user-emacs-directory)))
+      backup-by-copying t
+      version-control t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2)
+
+(setq auto-save-default t
+      auto-save-interval 1200
+      auto-save-timeout 120)
+
+;; Package
+(when is-windows
+  (setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg"))
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+
+(unless (bound-and-true-p package--initialized) (package-initialize))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile (require 'use-package))
+(setq use-package-always-ensure t)
+
+;; Theme
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
+
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Fonts
+(global-font-lock-mode 1)
+
+(use-package faces
+  :ensure nil
+  :preface
+  (defun sztk-setup-fonts (&optional frame)
+    (with-selected-frame (or frame (selected-frame))
+      (set-face-attribute 'default nil :family "Fira Mono" :height 120)
+      (set-face-attribute 'fixed-pitch nil :family "Fira Mono")
+      (set-fontset-font t 'han (font-spec :family "Noto Sans CJK SC"))
+      (set-fontset-font t 'kana (font-spec :family "Noto Sans CJK JP"))
+      (set-fontset-font t 'hangul (font-spec :family "Noto Sans CJK KR"))
+      (set-fontset-font t 'bopomofo (font-spec
+                                     :family "Noto Sans CJK TC"))))
+  :config
+  (add-to-list 'default-frame-alist '(font . "Fira Mono"))
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions #'sztk-setup-fonts)
+    (sztk-setup-fonts)))
+
+;; Mode Remap
+(setq major-mode-remap-alist
+      '((c-mode        . c-ts-mode)
+        (c++-mode      . c++-ts-mode)
+        (c-or-c++-mode . c-or-c++-ts-mode)
+        (cmake-mode    . cmake-ts-mode)
+        (python-mode   . python-ts-mode)))
+
+;; Completion
+(electric-pair-mode 1)
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-preselect 'prompt)
+  (corfu-auto-delay 0.1)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
+  (corfu-preview-current nil)
+  :init
+  (global-corfu-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides
+   '((file (styles basic partial-completion)))))
+
+;; Eglot
+(use-package eglot
+  :ensure nil
+  :hook
+  ((c-ts-mode
+    c++-ts-mode
+    ;; cmake-ts-mode
+    python-ts-mode) . eglot-ensure)
+  :bind
+  (:map eglot-mode-map
+        ("C-c r" . eglot-rename)
+        ("C-c a" . eglot-code-actions)
+        ("C-c f" . eglot-format)
+        ("C-c o" . eglot-alternatives))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((c-ts-mode c++-ts-mode)
+                 . ("clangd"
+                    "--background-index"
+                    "--clang-tidy"
+                    "--completion-style=detailed"
+                    "--header-insertion=never"
+                    "--pch-storage=memory")))
+  (add-to-list 'eglot-server-programs
+               '(python-ts-mode
+                 . ("pyright-langserver"
+                    "--stdio")))
+  (setq eglot-autoshutdown t))
+
+(use-package eldoc
+  :ensure nil
+  :custom
+  (eldoc-echo-area-use-multiline-p nil))
+
+;; Project
+(recentf-mode 1)
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+
+(use-package project
+  :ensure nil
+  :bind
+  (("C-x p f" . project-find-file)
+   ("C-x p b" . project-switch-to-buffer)
+   ("C-x p r" . project-query-replace-regexp))
+  :config
+  (setq project-switch-commands
+        '((project-find-file "Find file" "f")
+          (project-find-regexp "Ripgrep" "g")
+          (project-switch-to-buffer "Buffer" "b")
+          (magit-project-status "Magit" "m"))))
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
+(use-package recentf
+  :ensure nil
+  :hook (after-init . recentf-mode))
+
+;; Git
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+;; C/C++
+(use-package c-ts-mode
+  :ensure nil
+  :if (treesit-available-p)
+  :custom
+  (c-ts-mode-indent-style 'bsd)
+  (c-ts-mode-indent-offset 4))
+
+(use-package cmake-ts-mode
+  :ensure nil)
+
+;; Common Lisp
+(use-package sly
+  :custom
+  (inferior-lisp-program "ros -Q run"))
+
+;; Python
+(use-package python
+  :ensure nil)
+
+(use-package flymake-ruff
+  :ensure t
+  :hook (eglot-managed-mode . flymake-ruff-load))
+
+;; TeX
+(use-package tex
+  :ensure auctex
+  :defer t
+  :hook
+  ((LaTeX-mode . turn-on-font-lock)
+   (LaTeX-mode . LaTeX-math-mode)
+   (LaTeX-mode . turn-on-reftex))
+  :config
+  (setq TeX-auto-save t
+        TeX-parse-self t
+        TeX-master nil)
+  (add-hook 'TeX-mode-hook #'(lambda () (setq fill-column 78))))
+
+;; Dashboard
+(defvar-local sztk-dashboard--was-visible nil)
+
+(use-package dashboard
+  :init
+  (setq dashboard-projects-backend 'project-el)
+  :config
+  (setq dashboard-startup-banner 'official
+        dashboard-center-content t
+        dashboard-show-shortcuts t
+        dashboard-items '((projects . 3)
+                          (recents  . 3))
+        dashboard-footer-messages '("Esc - Meta - Alt - Ctrl - Shift"))
+  (dashboard-setup-startup-hook)
+
+  (defun sztk-auto-kill-dashboard (&rest _)
+    (if-let ((buf (get-buffer "*dashboard*")))
+        (with-current-buffer buf
+          (if-let ((is-visible (get-buffer-window buf 'visible)))
+              (setq-local sztk-dashboard--was-visible t)
+            (when sztk-dashboard--was-visible
+              (remove-hook 'buffer-list-update-hook
+                           #'sztk-auto-kill-dashboard)
+              (run-with-idle-timer
+               0 nil
+               (lambda (b)
+                 (when (buffer-live-p b) (kill-buffer b)))
+               buf))))
+      (remove-hook 'buffer-list-update-hook #'sztk-auto-kill-dashboard)))
+
+  (defun sztk-dashboard--do-register-cleanup-hook ()
+    (when (and (fboundp 'daemonp) (daemonp))
+      (remove-hook 'server-after-make-frame-hook
+                   #'sztk-dashboard--do-register-cleanup-hook)
+      (when-let ((buf (get-buffer "*dashboard*")))
+        (switch-to-buffer buf)
+        (with-current-buffer buf
+          (dashboard-refresh-buffer))))
+    (add-hook 'buffer-list-update-hook #'sztk-auto-kill-dashboard))
+
+  (defun sztk-dashboard-register-cleanup-hook ()
+    (if (and (fboundp 'daemonp) (daemonp))
+        (add-hook 'server-after-make-frame-hook
+                  #'sztk-dashboard--do-register-cleanup-hook)
+      (sztk-dashboard--do-register-cleanup-hook)))
+
+  (add-hook 'dashboard-after-initialize-hook
+            #'sztk-dashboard-register-cleanup-hook))
+
+;; Terminal
+(defun sztk-terminal--run (dir)
+  (let* ((dir (expand-file-name dir))
+         (default-directory dir)
+         (terminals
+          `(("konsole" "--new-tab" "--workdir" ,dir)
+            ("wt.exe" "-w" "0" "nt"
+             "-d" ,(if is-windows (sztk-path-msys2-to-windows dir) dir)
+             "-p" "MSYS2-UCRT64"))))
+    (unless (and (display-graphic-p)
+                 (cl-loop for (exe . args) in terminals
+                          when (executable-find exe)
+                          return (make-process
+                                  :name (concat exe "-from-emacs")
+                                  :buffer nil
+                                  :command (cons exe args)
+                                  :connection-type 'pipe
+                                  :noquery t)))
+      (shell))))
+
+(defun sztk-terminal-open-here ()
+  (interactive)
+  (sztk-terminal--run default-directory))
+
+(defun sztk-terminal-open-project ()
+  (interactive)
+  (if-let ((project (project-current t)))
+      (sztk-terminal--run (project-root project))
+    (sztk-terminal--run default-directory)))
+
+(keymap-global-set "C-c t" #'sztk-terminal-open-here)
+
+(with-eval-after-load 'project
+  (keymap-set project-prefix-map "t" #'sztk-terminal-open-project))
+
+;;; init.el ends here
