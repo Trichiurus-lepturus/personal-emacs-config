@@ -186,7 +186,6 @@
   (eldoc-echo-area-use-multiline-p nil))
 
 ;; Project
-(recentf-mode 1)
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 
@@ -204,11 +203,7 @@
           (magit-project-status "Magit" "m"))))
 
 (use-package envrc
-  :hook (after-init . envrc-global-mode))
-
-(use-package recentf
-  :ensure nil
-  :hook (after-init . recentf-mode))
+  :commands (envrc-mode envrc-global-mode))
 
 ;; Git
 (use-package magit
@@ -291,11 +286,16 @@
   (markdown-toc-preset 'pandoc))
 
 ;; Dashboard
+(use-package recentf
+  :ensure nil
+  :init (recentf-mode 1))
+
 (defvar-local sztk-dashboard--was-visible nil)
 
 (use-package dashboard
   :init
   (setq dashboard-projects-backend 'project-el)
+  (add-hook 'dashboard-before-initialize-hook #'recentf-mode)
   :config
   (setq dashboard-startup-banner 'official
         dashboard-center-content t
