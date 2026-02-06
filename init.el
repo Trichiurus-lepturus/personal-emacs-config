@@ -214,6 +214,22 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+;; TRAMP
+(use-package tramp
+  :defer t
+  :init
+  (setq tramp-persistency-file-name
+        (expand-file-name "tramp" user-emacs-directory))
+  :config
+  (setq vc-handled-backends nil)
+  (setq tramp-verbose 1)
+  (setq tramp-chunksize 2048)
+  (setq tramp-use-connection-share nil)
+  (setq tramp-ssh-controlmaster-options
+        (concat
+         "-o ControlPath=~/.ssh/tramp-%%r@%%h:%%p "
+         "-o ControlMaster=auto -o ControlPersist=10m")))
+
 ;; C/C++
 (use-package c-ts-mode
   :ensure nil
