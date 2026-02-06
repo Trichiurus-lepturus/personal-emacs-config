@@ -238,6 +238,8 @@
 
 ;; Common Lisp
 (use-package sly
+  :defer t
+  :commands (sly)
   :custom
   (inferior-lisp-program "ros -Q run"))
 
