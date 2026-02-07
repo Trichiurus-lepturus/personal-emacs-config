@@ -216,6 +216,10 @@
   (setq tramp-persistency-file-name
         (expand-file-name "tramp" user-emacs-directory))
   :config
+  (setq tramp-auto-save-directory
+        (expand-file-name "tramp-autosave/" user-emacs-directory))
+  (add-to-list 'backup-directory-alist
+               (cons tramp-file-name-regexp nil))
   (setq vc-handled-backends nil)
   (setq tramp-verbose 1)
   (setq tramp-chunksize 2048)
