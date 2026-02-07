@@ -5,9 +5,11 @@
 
 /auto-save-list/
 /backups/
+/games/
+/transient/
 /tree-sitter/
 /tutorial/
-/transient/
+/url/
 
 /tramp
 /recentf
