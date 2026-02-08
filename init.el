@@ -384,6 +384,7 @@
              "-d" ,(if is-windows (sztk-path-msys2-to-windows dir) dir)
              "-p" "MSYS2-UCRT64"))))
     (unless (and (display-graphic-p)
+                 (not (file-remote-p dir))
                  (cl-loop for (exe . args) in terminals
                           when (executable-find exe)
                           return (make-process
