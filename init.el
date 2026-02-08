@@ -316,6 +316,7 @@
 
 (use-package markdown-toc
   :ensure t
+  :defer t
   :custom
   (markdown-toc-header-toc-start "<!-- toc-begin -->")
   (markdown-toc-header-toc-title "")
