@@ -213,10 +213,11 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil))
 
-;; Project
+;; Dired
 (global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
+(add-hook 'dired-mode-hook 'global-auto-revert-mode)
 
+;; Project
 (use-package project
   :ensure nil
   :bind
