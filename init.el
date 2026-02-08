@@ -335,8 +335,8 @@
   (setq dashboard-startup-banner 'official
         dashboard-center-content t
         dashboard-show-shortcuts t
-        dashboard-items '((projects . 3)
-                          (recents  . 3))
+        dashboard-items '((projects . 6)
+                          (recents  . 6))
         dashboard-footer-messages '("Esc - Meta - Alt - Ctrl - Shift"))
   (dashboard-setup-startup-hook)
 
