@@ -157,7 +157,6 @@
       '((c-mode        . c-ts-mode)
         (c++-mode      . c++-ts-mode)
         (c-or-c++-mode . c-or-c++-ts-mode)
-        (cmake-mode    . cmake-ts-mode)
         (python-mode   . python-ts-mode)))
 
 ;; Completion
@@ -267,13 +266,16 @@
 ;; C/C++
 (use-package c-ts-mode
   :ensure nil
+  :defer t
   :if (treesit-available-p)
   :custom
   (c-ts-mode-indent-style 'bsd)
   (c-ts-mode-indent-offset 4))
 
 (use-package cmake-ts-mode
-  :ensure nil)
+  :ensure nil
+  :defer t
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
 
 ;; Common Lisp
 (use-package sly
@@ -284,10 +286,12 @@
 
 ;; Python
 (use-package python
-  :ensure nil)
+  :ensure nil
+  :defer t)
 
 (use-package flymake-ruff
   :ensure t
+  :defer t
   :hook (eglot-managed-mode . flymake-ruff-load))
 
 ;; TeX
