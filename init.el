@@ -2,6 +2,8 @@
 
 (require 'cl-lib)
 
+(setq package-enable-at-startup nil)
+
 ;; System
 (defconst is-windows (eq system-type 'windows-nt))
 
@@ -46,17 +48,19 @@
 
 ;; Package
 (require 'package)
+
 (when is-windows
   (setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg"))
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-(unless (bound-and-true-p package--initialized) (package-initialize))
 
 (unless (package-installed-p 'use-package)
+  (package-initialize)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
+
 (setq use-package-always-ensure t)
 
 ;; UI
