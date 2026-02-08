@@ -26,7 +26,48 @@
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
 
+;; Custom
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;; Backup
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name "backups" user-emacs-directory)))
+      backup-by-copying t
+      version-control t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2)
+
+(setq auto-save-default t
+      auto-save-interval 1200
+      auto-save-timeout 120)
+
+;; Package
+(require 'package)
+(when is-windows
+  (setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg"))
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(unless (bound-and-true-p package--initialized) (package-initialize))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile (require 'use-package))
+(setq use-package-always-ensure t)
+
 ;; UI
+(setq-default indent-tabs-mode nil
+              fill-column 76
+              require-final-newline t)
+
+(setq default-input-method nil
+      winner-mode 1
+      repeat-mode 1)
+
 (setq inhibit-startup-screen t
       inhibit-startup-message t
       inhibit-startup-echo-area-message t
@@ -36,18 +77,18 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode 1)
-
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-(setq-default indent-tabs-mode nil
-              fill-column 78
-              require-final-newline t)
-
 (column-number-mode 1)
 (global-hl-line-mode 1)
+(global-font-lock-mode 1)
 
+(add-to-list 'default-frame-alist '(width . 100))
+(add-to-list 'default-frame-alist '(height . 50))
+
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+;; Scroll
 (pixel-scroll-precision-mode 1)
 (setq pixel-scroll-precision-interpolate-page t)
 
@@ -76,58 +117,7 @@
 (defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
 (defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
 
-(winner-mode 1)
-(repeat-mode 1)
-
-;; IME
-(setq default-input-method nil)
-
-;; Backup
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name "backups" user-emacs-directory)))
-      backup-by-copying t
-      version-control t
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2)
-
-(setq auto-save-default t
-      auto-save-interval 1200
-      auto-save-timeout 120)
-
-;; Package
-(when is-windows
-  (setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg"))
-
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-
-(unless (bound-and-true-p package--initialized) (package-initialize))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile (require 'use-package))
-(setq use-package-always-ensure t)
-
-;; Theme
-(use-package doom-themes
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-dracula t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
-
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
 ;; Fonts
-(global-font-lock-mode 1)
-
 (use-package faces
   :ensure nil
   :preface
@@ -138,13 +128,25 @@
       (set-fontset-font t 'han (font-spec :family "Noto Sans CJK SC"))
       (set-fontset-font t 'kana (font-spec :family "Noto Sans CJK JP"))
       (set-fontset-font t 'hangul (font-spec :family "Noto Sans CJK KR"))
-      (set-fontset-font t 'bopomofo (font-spec
-                                     :family "Noto Sans CJK TC"))))
+      (set-fontset-font t 'bopomofo
+                        (font-spec :family "Noto Sans CJK TC"))))
   :config
   (add-to-list 'default-frame-alist '(font . "Fira Mono"))
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'sztk-setup-fonts)
     (sztk-setup-fonts)))
+
+;; Theme
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Mode Remap
 (setq major-mode-remap-alist
