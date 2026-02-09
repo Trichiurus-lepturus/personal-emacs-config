@@ -152,6 +152,35 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; Scroll
+(pixel-scroll-precision-mode 1)
+(setq pixel-scroll-precision-interpolate-page t)
+
+(defun +pixel-scroll-interpolate-down (&optional arg)
+  (interactive "P")
+  (if pixel-scroll-precision-interpolate-page
+      (pixel-scroll-precision-interpolate
+       (if arg
+           (* -1 (prefix-numeric-value arg) (pixel-line-height))
+         (- (* 0.75 (window-text-height nil t)))) nil 1)
+    (condition-case nil
+	(scroll-up arg)
+      (end-of-buffer (goto-char (point-max))))))
+
+(defun +pixel-scroll-interpolate-up (&optional arg)
+  (interactive "P")
+  (if pixel-scroll-precision-interpolate-page
+      (pixel-scroll-precision-interpolate
+       (if arg
+           (* (prefix-numeric-value arg) (pixel-line-height))
+         (* 0.75 (window-text-height nil t))) nil 1)
+    (condition-case nil
+	(scroll-down)
+      (beginning-of-buffer (goto-char (point-min))))))
+
+(defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
+(defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
+
 ;; Mode Remap
 (setq major-mode-remap-alist
       '((c-mode        . c-ts-mode)
