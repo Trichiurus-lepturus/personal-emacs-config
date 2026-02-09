@@ -181,6 +181,12 @@
 (defalias 'scroll-up-command '+pixel-scroll-interpolate-down)
 (defalias 'scroll-down-command '+pixel-scroll-interpolate-up)
 
+;; Help
+(use-package which-key
+  :ensure nil
+  :init
+  (which-key-mode))
+
 ;; Mode Remap
 (setq major-mode-remap-alist
       '((c-mode        . c-ts-mode)
