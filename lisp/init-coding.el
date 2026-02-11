@@ -58,6 +58,10 @@
   :custom
   (inferior-lisp-program "ros -Q run"))
 
+(use-package elisp
+  :ensure nil
+  :hook (emacs-lisp-mode . flymake-mode))
+
 (use-package python
   :ensure nil
   :defer t)
