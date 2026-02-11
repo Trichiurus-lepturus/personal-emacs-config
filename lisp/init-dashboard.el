@@ -7,9 +7,11 @@
 (defvar-local sztk-dashboard--was-visible nil)
 
 (use-package dashboard
+  :defer t
   :init
   (setq dashboard-projects-backend 'project-el)
   (add-hook 'dashboard-before-initialize-hook #'recentf-mode)
+  (dashboard-setup-startup-hook)
   :config
   (setq dashboard-startup-banner 'official
         dashboard-center-content t
@@ -17,7 +19,6 @@
         dashboard-items '((projects . 6)
                           (recents  . 6))
         dashboard-footer-messages '("Esc - Meta - Alt - Ctrl - Shift"))
-  (dashboard-setup-startup-hook)
 
   (defun sztk-auto-kill-dashboard (&rest _)
     (if-let ((buf (get-buffer "*dashboard*")))
