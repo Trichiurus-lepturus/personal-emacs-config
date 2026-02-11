@@ -14,7 +14,6 @@
   (add-hook 'TeX-mode-hook #'(lambda () (setq fill-column 78))))
 
 (use-package markdown-mode
-  :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init
   (setq markdown-command
@@ -27,7 +26,6 @@
   (markdown-enable-math t))
 
 (use-package markdown-toc
-  :ensure t
   :defer t
   :custom
   (markdown-toc-header-toc-start "<!-- toc-begin -->")

@@ -63,7 +63,6 @@
   :defer t)
 
 (use-package flymake-ruff
-  :ensure t
   :defer t
   :hook (eglot-managed-mode . flymake-ruff-load))
 

@@ -20,6 +20,7 @@
   :bind ("C-x g" . magit-status))
 
 (use-package tramp
+  :ensure nil
   :defer t
   :init
   (setq tramp-persistency-file-name
