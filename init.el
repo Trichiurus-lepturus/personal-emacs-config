@@ -1,6 +1,7 @@
 ;;; init.el --- Main Emacs Config -*- lexical-binding: t; -*-
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(eval-and-compile
+  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
 
 (require 'init-const)
 (require 'init-package)
