@@ -39,6 +39,14 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil))
 
+(use-package flymake
+  :ensure nil
+  :bind
+  (:map flymake-mode-map
+        ("M-n" . flymake-goto-next-error)
+        ("M-p" . flymake-goto-prev-error)
+        ("C-c !" . flymake-show-buffer-diagnostics)))
+
 (use-package c-ts-mode
   :ensure nil
   :defer t
