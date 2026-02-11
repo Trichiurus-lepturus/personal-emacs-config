@@ -47,9 +47,10 @@
     (sztk-setup-fonts)))
 
 (use-package doom-themes
-  :config
+  :custom
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
+  :config
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
