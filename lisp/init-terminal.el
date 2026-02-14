@@ -36,7 +36,7 @@
 
 (defun sztk-terminal-open-project ()
   (interactive)
-  (if-let ((project (project-current t)))
+  (if-let ((project (project-current nil)))
       (sztk-terminal--run (project-root project))
     (sztk-terminal--run default-directory)))
 
