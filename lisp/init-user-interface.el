@@ -48,8 +48,8 @@
 
 (use-package doom-themes
   :custom
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
   :config
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
