@@ -53,7 +53,6 @@
 (use-package c-ts-mode
   :ensure nil
   :defer t
-  :if (treesit-available-p)
   :custom
   (c-ts-mode-indent-style 'bsd)
   (c-ts-mode-indent-offset 4))
