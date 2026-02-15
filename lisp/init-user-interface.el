@@ -4,9 +4,12 @@
               fill-column 76
               require-final-newline t)
 
-(setq default-input-method nil
-      winner-mode 1
-      repeat-mode 1)
+(setq default-input-method nil)
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (winner-mode 1)
+            (repeat-mode 1)))
 
 (setq inhibit-startup-screen t
       inhibit-startup-message t
