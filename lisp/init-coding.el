@@ -18,7 +18,9 @@
         ("C-c r" . eglot-rename)
         ("C-c a" . eglot-code-actions)
         ("C-c f" . eglot-format)
-        ("C-c o" . eglot-alternatives))
+        ("C-c C-d" . eglot-find-declaration)
+        ("C-c C-i" . eglot-find-implementation)
+        ("C-c C-t" . eglot-find-typeDefinition))
   :config
   (add-to-list 'eglot-server-programs
                '((c-ts-mode c++-ts-mode)
