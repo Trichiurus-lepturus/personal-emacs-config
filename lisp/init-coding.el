@@ -11,7 +11,7 @@
   :hook
   ((c-ts-mode
     c++-ts-mode
-    ;; cmake-ts-mode
+    cmake-ts-mode
     python-ts-mode) . eglot-ensure)
   :bind
   (:map eglot-mode-map
@@ -28,6 +28,9 @@
                     "--completion-style=detailed"
                     "--header-insertion=never"
                     "--pch-storage=memory")))
+  (add-to-list 'eglot-server-programs
+               '(cmake-ts-mode
+                 . ("neocmakelsp" "stdio")))
   (add-to-list 'eglot-server-programs
                '(python-ts-mode
                  . ("pyright-langserver"
