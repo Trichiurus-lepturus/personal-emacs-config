@@ -68,7 +68,10 @@
   :defer t
   :commands (sly)
   :custom
-  (inferior-lisp-program "ros -Q run"))
+  (inferior-lisp-program
+   (if (executable-find "ros")
+       "ros -Q run"
+     "sbcl")))
 
 (use-package elisp
   :ensure nil
