@@ -17,8 +17,9 @@
       initial-scratch-message nil
       use-dialog-box nil)
 
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
 (menu-bar-mode 1)
 (column-number-mode 1)
 (global-hl-line-mode 1)
@@ -36,15 +37,17 @@
   :preface
   (defun sztk-setup-fonts (&optional frame)
     (with-selected-frame (or frame (selected-frame))
-      (set-face-attribute 'default nil :family "Fira Mono" :height 120)
-      (set-face-attribute 'fixed-pitch nil :family "Fira Mono")
-      (set-fontset-font t 'han (font-spec :family "Noto Sans CJK SC"))
-      (set-fontset-font t 'kana (font-spec :family "Noto Sans CJK JP"))
-      (set-fontset-font t 'hangul (font-spec :family "Noto Sans CJK KR"))
-      (set-fontset-font t 'bopomofo
-                        (font-spec :family "Noto Sans CJK TC"))))
+      (when (display-graphic-p frame)
+        (set-face-attribute 'default nil :family "Fira Mono" :height 120)
+        (set-face-attribute 'fixed-pitch nil :family "Fira Mono")
+        (set-fontset-font t 'han (font-spec :family "Noto Sans CJK SC"))
+        (set-fontset-font t 'kana (font-spec :family "Noto Sans CJK JP"))
+        (set-fontset-font t 'hangul (font-spec :family "Noto Sans CJK KR"))
+        (set-fontset-font t 'bopomofo
+                          (font-spec :family "Noto Sans CJK TC")))))
   :config
-  (add-to-list 'default-frame-alist '(font . "Fira Mono"))
+  (when (display-graphic-p)
+    (add-to-list 'default-frame-alist '(font . "Fira Mono")))
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'sztk-setup-fonts)
     (sztk-setup-fonts)))
