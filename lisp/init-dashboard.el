@@ -13,7 +13,9 @@
   (add-hook 'dashboard-before-initialize-hook #'recentf-mode)
   (dashboard-setup-startup-hook)
   :config
-  (setq dashboard-startup-banner 'official
+  (setq dashboard-startup-banner
+        `(,(expand-file-name "banner/emacs-china.png" user-emacs-directory)
+          . ,(expand-file-name "banner/ascii-art.txt" user-emacs-directory))
         dashboard-center-content t
         dashboard-show-shortcuts t
         dashboard-items '((projects . 6)
