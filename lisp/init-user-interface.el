@@ -17,9 +17,8 @@
       initial-scratch-message nil
       use-dialog-box nil)
 
-(when (display-graphic-p)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (menu-bar-mode 1)
 (column-number-mode 1)
 (global-hl-line-mode 1)
