@@ -15,15 +15,14 @@
   (add-hook 'dashboard-before-initialize-hook #'recentf-mode)
 
   (defun sztk-dashboard-choose-banner ()
-    (let* ((banner-dir (expand-file-name "banners/"
-                                         user-emacs-directory))
-           (width (window-width))
-           (has-png (and (display-graphic-p)
-                         (image-type-available-p 'png)))
-           (banner-file (cond
-                         (has-png "emacs-china.png")
-                         ((>= width 80) "ascii-art.txt")
-                         (t "alt-ascii-art.txt"))))
+    (let ((banner-dir (expand-file-name "banners/"
+                                        user-emacs-directory))
+          (banner-file (cond
+                        ((and (display-graphic-p)
+                              (image-type-available-p 'png))
+                         "emacs-china.png")
+                        ((>= (window-width) 80) "ascii-art.txt")
+                        (t "alt-ascii-art.txt"))))
       (setq dashboard-startup-banner
             (expand-file-name banner-file banner-dir))))
   (add-hook 'dashboard-before-initialize-hook
