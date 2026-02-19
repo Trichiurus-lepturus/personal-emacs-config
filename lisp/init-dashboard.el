@@ -32,9 +32,8 @@
                            #'sztk-auto-kill-dashboard)
               (run-with-idle-timer
                0 nil
-               (lambda (b)
-                 (when (buffer-live-p b) (kill-buffer b)))
-               buf))))
+               (lambda ()
+                 (when (buffer-live-p buf) (kill-buffer buf)))))))
       (remove-hook 'buffer-list-update-hook #'sztk-auto-kill-dashboard)))
 
   (defun sztk-dashboard--do-register-cleanup-hook ()
