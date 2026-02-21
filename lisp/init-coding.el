@@ -73,6 +73,12 @@
        "ros -Q run"
      "sbcl")))
 
+(use-package racket-mode
+  :ensure t
+  :hook ((racket-mode . racket-xp-mode)
+         (racket-mode . (lambda ()
+                          (setq-local tab-always-indent 'complete)))))
+
 (use-package elisp
   :ensure nil
   :hook (emacs-lisp-mode . flymake-mode))
