@@ -24,9 +24,6 @@
 (global-hl-line-mode 1)
 (global-font-lock-mode 1)
 
-(add-to-list 'default-frame-alist '(width . 100))
-(add-to-list 'default-frame-alist '(height . 50))
-
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -45,8 +42,6 @@
         (set-fontset-font t 'bopomofo
                           (font-spec :family "Noto Sans CJK TC")))))
   :config
-  (when (display-graphic-p)
-    (add-to-list 'default-frame-alist '(font . "Fira Mono")))
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'sztk-setup-fonts)
     (sztk-setup-fonts)))
