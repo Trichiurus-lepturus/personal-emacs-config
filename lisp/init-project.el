@@ -33,11 +33,18 @@
   (setq vc-handled-backends nil)
   (setq tramp-verbose 1)
   (setq tramp-chunksize 2048)
-  (setq tramp-use-connection-share nil)
+  (setq tramp-use-connection-share t)
   (setq tramp-ssh-controlmaster-options
         (concat
          "-o ControlPath=~/.ssh/tramp-%%r@%%h:%%p "
-         "-o ControlMaster=auto -o ControlPersist=10m")))
+         "-o ControlMaster=auto -o ControlPersist=10m"))
+  (setq enable-remote-dir-locals t))
+
+(use-package tramp-hlo
+  :ensure t
+  :after tramp
+  :config
+  (tramp-hlo-setup))
 
 (provide 'init-project)
 
