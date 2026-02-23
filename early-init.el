@@ -3,6 +3,5 @@
 (add-to-list 'default-frame-alist '(foreground-color . "#f8f8f2"))
 (add-to-list 'default-frame-alist '(width . 100))
 (add-to-list 'default-frame-alist '(height . 50))
-(when (display-graphic-p)
-    (add-to-list 'default-frame-alist '(font . "Fira Mono-12")))
+(add-to-list 'default-frame-alist '(font . "Fira Mono-12"))
 (setq package-enable-at-startup nil)
