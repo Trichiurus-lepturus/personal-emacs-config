@@ -65,9 +65,10 @@
            (next-theme (or (cadr (member (car custom-enabled-themes)
                                          themes))
                            (car themes))))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme next-theme t)
-    (message "Theme: %s" next-theme)))
+      (set-face-background 'default "#111111")
+      (mapc #'disable-theme custom-enabled-themes)
+      (load-theme next-theme t)
+      (message "Theme: %s" next-theme)))
   (global-set-key (kbd "C-c y") #'sztk-toggle-theme))
 
 (use-package rainbow-delimiters
