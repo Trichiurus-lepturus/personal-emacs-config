@@ -68,6 +68,7 @@
       (set-face-background 'default (face-background 'default))
       (mapc #'disable-theme custom-enabled-themes)
       (load-theme next-theme t)
+      (set-face-background 'default (face-background 'default))
       (message "Theme: %s" next-theme)))
   (global-set-key (kbd "C-c y") #'sztk-toggle-theme))
 
