@@ -57,7 +57,18 @@
   :config
   (load-theme 'doom-nord-aurora t)
   (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+
+  (defun sztk-toggle-theme ()
+    (interactive)
+    (let* ((themes '(doom-nord-aurora doom-gruvbox))
+           (next-theme (or (cadr (member (car custom-enabled-themes)
+                                         themes))
+                           (car themes))))
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme next-theme t)
+    (message "Theme: %s" next-theme)))
+  (global-set-key (kbd "C-c y") #'sztk-toggle-theme))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
