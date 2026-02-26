@@ -1,6 +1,5 @@
 (setq-default frame-background-mode 'dark)
 (setq frame-inhibit-implied-resize t)
-(add-to-list 'default-frame-alist '(background-color . "#2A2E32"))
 (add-to-list 'default-frame-alist '(width . 100))
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(font . "Fira Mono-12"))
