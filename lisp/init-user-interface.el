@@ -50,14 +50,24 @@
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
+(defun sztk-adv-preserve-background (orig-fun theme &rest args)
+  (let ((graphic-frame-p (and (display-graphic-p)
+                              (frame-live-p (selected-frame)))))
+    (when-let* ((_ graphic-frame-p)
+                (bg (face-background 'default)))
+      (set-face-background 'default bg))
+    (apply orig-fun theme args)
+    (when-let* ((_ graphic-frame-p)
+                (bg (face-background 'default)))
+      (set-face-background 'default bg))))
+(advice-add 'load-theme :around #'sztk-adv-preserve-background)
+
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t)
   :config
-  (set-face-background 'default (face-background 'default))
   (load-theme 'doom-nord-aurora t)
-  (set-face-background 'default (face-background 'default))
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
@@ -67,9 +77,7 @@
   (let* ((current-theme (car custom-enabled-themes))
          (next-theme (or (cadr (member current-theme sztk-theme-circle))
                          (car sztk-theme-circle))))
-    (set-face-background 'default (face-background 'default))
     (load-theme next-theme t)
-    (set-face-background 'default (face-background 'default))
     (mapc #'disable-theme (cdr custom-enabled-themes))
     (message "Theme: %s" next-theme)))
 (global-set-key (kbd "C-c y") #'sztk-toggle-theme)
