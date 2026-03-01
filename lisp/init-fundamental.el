@@ -6,7 +6,7 @@
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 
-(when is-windows
+(when windows-p
   (set-clipboard-coding-system 'utf-16le-dos)
   (setq process-coding-system-alist
         '((".*" . utf-8-unix))))
