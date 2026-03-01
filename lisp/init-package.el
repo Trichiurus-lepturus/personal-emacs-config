@@ -3,7 +3,7 @@
 (require 'package)
 (require 'init-const)
 
-(when is-windows
+(when windows-p
   (setq package-gnupghome-dir "~/.emacs.d/elpa/gnupg"))
 
 (add-to-list 'package-archives

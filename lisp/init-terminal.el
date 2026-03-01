@@ -19,7 +19,6 @@
          (terminals
           `(("konsole" "--new-tab" "--workdir" ,dir)
             ("wt.exe" "-w" "0" "nt"
-             "-d" ,(if is-windows (sztk-path-msys2-to-windows dir) dir)
              "-p" "MSYS2-UCRT64"))))
     (unless (and (display-graphic-p)
                  (not (file-remote-p dir))
