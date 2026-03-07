@@ -15,6 +15,7 @@
 
 (require 'init-dashboard)
 (require 'init-terminal)
+(require 'init-ai-assist)
 (require 'init-custom-file)
 
 ;;; init.el ends here
