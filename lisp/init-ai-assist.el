@@ -11,6 +11,7 @@
   :config
   (setq gptel-default-mode 'org-mode
         gptel-model 'deepseek/deepseek-v3.2
+        gptel-use-tools nil
         gptel-backend
         (gptel-make-openai "OpenRouter"
           :host "openrouter.ai"
