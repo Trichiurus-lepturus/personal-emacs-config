@@ -9,6 +9,9 @@
 (use-package gptel
   :defer t
   :config
+  (setf (alist-get 'default gptel-directives)
+        "You are a large language model living in Emacs \
+and a helpful assistant. Respond concisely using org-mode syntax.")
   (setq gptel-default-mode 'org-mode
         gptel-model 'deepseek/deepseek-v3.2
         gptel-use-tools nil
