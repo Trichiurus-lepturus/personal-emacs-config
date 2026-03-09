@@ -27,6 +27,9 @@
       auto-save-interval 1200
       auto-save-timeout 120)
 
+(add-to-list 'auth-sources
+             (expand-file-name ".authinfo.gpg" user-emacs-directory))
+
 (provide 'init-fundamental)
 
 ;;; lisp/init-fundamental.el ends here

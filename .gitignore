@@ -14,7 +14,7 @@
 /tutorial/
 /url/
 
-/ai-assist-api-key.txt
+/.authinfo*
 /tramp
 /recentf
 /projects
