@@ -36,6 +36,11 @@
   (markdown-toc-header-toc-end "<!-- toc-end -->")
   (markdown-toc-preset 'pandoc))
 
+(use-package org-mode
+  :ensure nil
+  :custom
+  (org-link-descriptive nil))
+
 (provide 'init-markup)
 
 ;;; lisp/init-markup.el ends here
