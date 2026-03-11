@@ -49,7 +49,7 @@
           (add-to-list 'face-font-rescale-alist (cons (cdr pair) 1.0)))
         (let ((emoji-font "Noto Color Emoji"))
           (set-fontset-font t 'emoji (font-spec :family emoji-font))
-          (add-to-list 'face-font-rescale-alist '(emoji-font . 1.21))))))
+          (add-to-list 'face-font-rescale-alist (cons emoji-font 1.21))))))
   :config
   (if (daemonp)
       (add-hook 'after-make-frame-functions #'sztk-setup-fonts)
