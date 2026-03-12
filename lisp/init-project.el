@@ -26,13 +26,17 @@
   (setq tramp-persistency-file-name
         (expand-file-name "tramp" user-emacs-directory))
   :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
   (setq tramp-auto-save-directory
         (expand-file-name "tramp-autosave/" user-emacs-directory))
   (add-to-list 'backup-directory-alist
-               (cons tramp-file-name-regexp nil))
+               (cons tramp-file-name-regexp
+                     (expand-file-name "tramp-backups/"
+                                       user-emacs-directory)))
   (setq vc-handled-backends nil)
   (setq tramp-verbose 1)
-  (setq tramp-chunksize 2048)
+  (setq tramp-chunksize 65536)
   (setq tramp-use-connection-share t)
   (setq tramp-ssh-controlmaster-options
         (concat
