@@ -9,7 +9,7 @@
 (when windows-p
   (set-clipboard-coding-system 'utf-16le-dos)
   (setq process-coding-system-alist
-        '((".*" . utf-8-unix))))
+        '((".*" . (utf-8-unix . utf-8-unix)))))
 
 (setq gc-cons-threshold (* 64 1024 1024))
 (add-hook 'emacs-startup-hook
