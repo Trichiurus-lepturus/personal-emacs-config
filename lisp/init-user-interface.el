@@ -132,6 +132,10 @@
   :init
   (which-key-mode))
 
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
 (provide 'init-user-interface)
 
 ;;; lisp/init-user-interface.el ends here
