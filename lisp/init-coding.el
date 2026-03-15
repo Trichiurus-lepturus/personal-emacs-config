@@ -92,7 +92,17 @@
 
 (use-package flymake-ruff
   :defer t
-  :hook (eglot-managed-mode . flymake-ruff-load))
+  :hook (eglot-managed-mode . flymake-ruff-load)
+  :preface
+  (defun sztk-flymake-ruff-severity-filter (orig-fun code)
+    (let ((severity (funcall orig-fun code)))
+      (cond
+       ((or (string-prefix-p "F" code)
+            (string-prefix-p "E" code)) :warning)
+       (t severity))))
+  :config
+  (advice-add 'flymake-ruff--severity-for-code
+              :around #'sztk-flymake-ruff-severity-filter))
 
 (provide 'init-coding)
 
