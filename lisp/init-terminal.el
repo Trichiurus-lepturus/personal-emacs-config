@@ -51,7 +51,10 @@
                       :command exterminal
                       :connection-type 'pipe
                       :noquery t)
-      (vterm))))
+      (let* ((dir-name (file-name-nondirectory
+                        (directory-file-name directory)))
+             (vterm-name (format "*vterm-%s*" dir-name)))
+        (vterm (generate-new-buffer-name vterm-name))))))
 
 (defun sztk-terminal-open-here ()
   (interactive)
