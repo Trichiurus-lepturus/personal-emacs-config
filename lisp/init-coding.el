@@ -106,8 +106,7 @@
   (defun sztk-flymake-ruff-severity-filter (orig-fun code)
     (let ((severity (funcall orig-fun code)))
       (cond
-       ((or (string-prefix-p "F" code)
-            (string-prefix-p "E" code)) :warning)
+       ((string-prefix-p "E" code) :warning)
        (t severity))))
   :config
   (advice-add 'flymake-ruff--severity-for-code
