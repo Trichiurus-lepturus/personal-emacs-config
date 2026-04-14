@@ -58,6 +58,10 @@
   :custom
   (org-link-descriptive nil))
 
+(use-package pdf-tools
+  :config
+  (pdf-loader-install))
+
 (provide 'init-markup)
 
 ;;; lisp/init-markup.el ends here
