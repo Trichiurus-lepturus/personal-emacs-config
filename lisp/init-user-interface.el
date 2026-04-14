@@ -25,10 +25,16 @@
 (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
+(setq ediff-window-setup-function #'ediff-setup-windows-plain)
+
 (use-package repeat
   :ensure nil
   :hook (after-init . repeat-mode)
   :custom (repeat-exit-timeout 3.0))
+
+(use-package winner
+  :ensure nil
+  :init (winner-mode 1))
 
 (use-package diminish)
 
