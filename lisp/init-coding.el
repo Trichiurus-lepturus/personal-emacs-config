@@ -1,5 +1,11 @@
 ;;; lisp/init-coding.el --- Coding -*- lexical-binding: t; -*-
 
+(defun sztk-coding-auto-delete-trailing-whitespace ()
+  (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
+
+(add-hook 'prog-mode-hook #'sztk-coding-auto-delete-trailing-whitespace)
+(add-hook 'emacs-lisp-mode #'sztk-coding-auto-delete-trailing-whitespace)
+
 (setq major-mode-remap-alist
       '((c-mode        . c-ts-mode)
         (c++-mode      . c++-ts-mode)
