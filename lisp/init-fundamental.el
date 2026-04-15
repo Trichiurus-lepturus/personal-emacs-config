@@ -27,6 +27,20 @@
       auto-save-interval 1200
       auto-save-timeout 120)
 
+(use-package epg
+  :ensure nil
+  :custom
+  (epg-pinentry-mode 'loopback)
+  (epg-gpg-program "gpg"))
+
+(use-package pinentry
+  :config
+  (condition-case err
+      (pinentry-start)
+    (error
+     (message "Warning: Pinentry service failed to start: %s"
+              (error-message-string err)))))
+
 (add-to-list 'auth-sources
              (expand-file-name ".authinfo.gpg" user-emacs-directory))
 
