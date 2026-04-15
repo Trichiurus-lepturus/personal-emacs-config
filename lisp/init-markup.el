@@ -59,8 +59,16 @@
   (org-link-descriptive nil))
 
 (use-package pdf-tools
+  :preface
+  (defun sztk-pdf-tools-init-once (frame)
+    (when (display-graphic-p frame)
+      (pdf-loader-install)
+      (remove-hook 'after-make-frame-functions #'sztk-pdf-tools-init-once)))
   :config
-  (pdf-loader-install))
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions #'sztk-pdf-tools-init-once)
+    (when (display-graphic-p)
+      (pdf-loader-install))))
 
 (provide 'init-markup)
 
